@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>测试</title>
+  <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.14.0/css/all.min.css" rel="stylesheet">
+  <link href="https://cdn.bootcdn.net/ajax/libs/layer/3.1.1/mobile/need/layer.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="./css/index.css">
+</head>
+<body>
+  <div class="chatroom">
+    <div class="title">聊天室</div>
+    <div class="main">
+      <div class="main-left">
+        <div class="main-left-top" id="messages">
+        </div>
+        <div class="main-left-bottom">
+          <div class="toolbar">
+            <input class="toolbar-icon" type="color" id="color" value="#333">
+            <div class="toolbar-icon fas fa-smile-wink"></div>
+            <div class="toolbar-icon fas fa-image"></div>
+          </div>
+          <div class="input">
+            <textarea class="input-textarea" name="textarea" id="input"></textarea>
+          </div>
+          <div class="button-wrap">
+            <div class="button" id="close">退出</div>
+            <div class="button" id="send">发送</div>
+          </div>
+        </div>
+      </div>
+      <div class="main-right">
+        <div class="member-title">成员列表</div>
+        <div class="member-list"></div>
+      </div>
+    </div>
+  </div>
+</body>
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/layer/3.1.1/layer.min.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="./js/index.js"></script>
+</html>
