@@ -1,26 +1,16 @@
 $(function() {
   const socket = io();
-  let hasLogin = sessionStorage.getItem('hasLogin');
-  if (!hasLogin) {
-    login();
-  }
+  login();
   socket.on('loginFail', name => {
     layer.alert('昵称重复请重新输入', index => {
       login();
       layer.close(index);
     })
   });
-  
-  socket.on('loginSuccess', () => {
-    sessionStorage.setItem('hasLogin', true);
-  });
-
-  socket.on('logout', () => {
-    sessionStorage.removeItem('hasLogin');
-  });
 
   socket.on('system', data => {
-    layer.msg(`${data.name}${data.status}聊天室`, { time: 1500 });
+    $('#messages')
+      .append(`<div class="system-msg">${new Date().toTimeString().substr(0, 8)} ${data.name}${data.status}聊天室</div>`);
   });
 
   socket.on('renderUserList', users => {

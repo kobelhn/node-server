@@ -23,9 +23,7 @@ io.on('connection', socket => {
     }
     if (!flag) {
       users.push(user);
-      socket.emit('loginSuccess');
       socket.nickname = user.name;
-      socket.hasLogin = true;
       io.emit('system', {
         name: user.name,
         status: '进入'

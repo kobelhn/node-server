@@ -54,6 +54,9 @@ body {
   text-align: center;
   color: #999;
 }
+.system-msg + .system-msg {
+  margin-top: 10px;
+}
 
 .msg-item {
   width: 100%;
