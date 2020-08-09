@@ -7,39 +7,54 @@ let users = [];
 
 io.on('connection', socket => {
   io.emit('renderUserList', users);
-  socket.on('login', data => {
+  socket.on('login', ({ nickname, color }) => {
     const user = {
       id: socket.id,
-      name: data.name,
-      color: '#333'
+      nickname,
+      color
     }
     let flag = false;
-    for (let user in users) {
-      if (user.name === data.name) {
-        socket.emit('loginFail', data.name);
+    for (let i = 0; i < users.length; i++) {
+      if (users[i].nickname === nickname) {
+        socket.emit('loginFail');
         flag = true;
         break;
       }
     }
     if (!flag) {
       users.push(user);
-      socket.nickname = user.name;
+      socket.nickname = nickname;
+      socket.color = color;
       io.emit('system', {
-        name: user.name,
+        nickname,
         status: '进入'
       });
       io.emit('renderUserList', users);
     }
   });
-  socket.on('sendMsg', data => {
+
+  socket.on('changeColor', ({ color }) => {
+    if (users.length) {
+      users.map((item, index) => {
+        if (item.id === socket.id) {
+          item.color = color;
+        }
+      });
+      socket.color = color;
+    }
+  });
+
+  socket.on('sendMsg', ({ msg }) => {
     socket.broadcast.emit('receiveMsg', {
-      name: socket.nickname,
-      msg: data.msg,
+      nickname: socket.nickname,
+      msg,
+      color: socket.color,
       self: false
     });
     socket.emit('receiveMsg', {
-      name: socket.nickname,
-      msg: data.msg,
+      nickname: socket.nickname,
+      msg,
+      color: socket.color,
       self: true
     });
   });
@@ -54,7 +69,7 @@ io.on('connection', socket => {
         }
       });
       io.emit('system', {
-        name: user.name,
+        nickname: user.nickname,
         status: '离开'
       });
       io.emit('renderUserList', users);
