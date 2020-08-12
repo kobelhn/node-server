@@ -7,7 +7,6 @@ $(function() {
       layer.close(index);
     })
   });
-
   socket.on('system', ({ nickname, status }) => {
     $('#messages')
       .append(`<div class="system-msg">${new Date().toTimeString().substr(0, 8)} ${nickname}${status}聊天室</div>`);
@@ -26,15 +25,23 @@ $(function() {
   });
 
   socket.on('receiveMsg', ({ nickname, msg, color, self }) => {
-    $('#messages').append(`<div class="msg-item ${self ? 'self' : ''}">
-      <div class="msg-img">
-        <img src="./img/avatar_default.jpg" alt="" class="msg-avatar">
-      </div>
-      <div class="msg-main">
-        <div class="msg-user">${nickname}</div>
-        <div class="msg-content" style="color: ${color};">${msg}</div>
-      </div>
-    </div>`);
+    let html = `<div class="msg-item ${self ? 'self' : ''}">`;
+    if (!self) {
+      html += `<div class="msg-img">
+                  <img src="./img/avatar_default.jpg" alt="" class="msg-avatar">
+                </div>`;
+    }
+    html += `<div class="msg-main">
+                <div class="msg-user">${nickname}</div>
+                <div class="msg-content" style="color: ${color};">${msg}</div>
+              </div>`;
+    if (self) {
+      html += `<div class="msg-img">
+                  <img src="./img/avatar_default.jpg" alt="" class="msg-avatar">
+                </div>`;
+    }
+    html += `</div>`;
+    $('#messages').append(html);
     $('#messages').scrollTop($('#messages')[0].scrollHeight);
   });
 
@@ -51,6 +58,26 @@ $(function() {
     socket.emit('changeColor', {
       color: $('#color').val()
     });
+  });
+
+  $('#file').change(e => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+
+    reader.onerror = () => {
+      layer.msg('读取文件失败，请重试');
+    }
+
+    reader.onload = () => {
+      const src = reader.result;
+      const msg = `<img src="${src}" class="msg-content-img" />`;
+      socket.emit('sendMsg', {
+        msg,
+      });
+    }
+
+    reader.readAsDataURL(file);
+
   });
 
   function sendMsg() {
